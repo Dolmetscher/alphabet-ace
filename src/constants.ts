@@ -15,7 +15,7 @@ export const ALPHABET_DATA: AlphabetItem[] = [
   { letter: 'K', word: 'Kite', emoji: '🪁' },
   { letter: 'L', word: 'Lion', emoji: '🦁' },
   { letter: 'M', word: 'Monkey', emoji: '🐵' },
-  { letter: 'N', word: 'Nest', emoji: ' nests' },
+  { letter: 'N', word: 'Nest', emoji: '🪺' },
   { letter: 'O', word: 'Orange', emoji: '🍊' },
   { letter: 'P', word: 'Pig', emoji: '🐷' },
   { letter: 'Q', word: 'Queen', emoji: '👑' },
