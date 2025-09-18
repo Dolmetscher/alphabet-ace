@@ -1,0 +1,31 @@
+
+import type { AlphabetItem } from './types';
+
+export const ALPHABET_DATA: AlphabetItem[] = [
+  { letter: 'A', word: 'Apple', emoji: '🍎' },
+  { letter: 'B', word: 'Ball', emoji: '⚽' },
+  { letter: 'C', word: 'Cat', emoji: '🐱' },
+  { letter: 'D', word: 'Dog', emoji: '🐶' },
+  { letter: 'E', word: 'Elephant', emoji: '🐘' },
+  { letter: 'F', word: 'Fish', emoji: '🐠' },
+  { letter: 'G', word: 'Goat', emoji: '🐐' },
+  { letter: 'H', word: 'Hat', emoji: '👒' },
+  { letter: 'I', word: 'Ice Cream', emoji: '🍦' },
+  { letter: 'J', word: 'Juice', emoji: '🧃' },
+  { letter: 'K', word: 'Kite', emoji: '🪁' },
+  { letter: 'L', word: 'Lion', emoji: '🦁' },
+  { letter: 'M', word: 'Monkey', emoji: '🐵' },
+  { letter: 'N', word: 'Nest', emoji: ' nests' },
+  { letter: 'O', word: 'Orange', emoji: '🍊' },
+  { letter: 'P', word: 'Pig', emoji: '🐷' },
+  { letter: 'Q', word: 'Queen', emoji: '👑' },
+  { letter: 'R', word: 'Robot', emoji: '🤖' },
+  { letter: 'S', word: 'Sun', emoji: '☀️' },
+  { letter: 'T', word: 'Train', emoji: '🚂' },
+  { letter: 'U', word: 'Umbrella', emoji: '☂️' },
+  { letter: 'V', word: 'Violin', emoji: '🎻' },
+  { letter: 'W', word: 'Watch', emoji: '⌚' },
+  { letter: 'X', word: 'Xylophone', emoji: '🎼' },
+  { letter: 'Y', word: 'Yacht', emoji: '⛵' },
+  { letter: 'Z', word: 'Zebra', emoji: '🦓' },
+];
