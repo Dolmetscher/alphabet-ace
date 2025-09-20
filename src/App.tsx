@@ -4,6 +4,19 @@ import { ALPHABET_DATA } from './constants';
 import { GameState } from './types';
 import type { AlphabetItem } from './types';
 
+// Utility function for text-to-speech
+const speak = (text: string) => {
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    // Cancel any ongoing speech to prevent overlap
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  } else {
+    console.error("Sorry, your browser doesn't support text-to-speech.");
+  }
+};
+
 // Helper Components (defined outside the main App component)
 
 const ScoreDisplay: React.FC<{ score: number; highScore: number }> = ({ score, highScore }) => (
@@ -17,11 +30,24 @@ const ScoreDisplay: React.FC<{ score: number; highScore: number }> = ({ score, h
   </div>
 );
 
-const LetterDisplay: React.FC<{ letter: string }> = ({ letter }) => (
-  <div className="mb-8 w-40 h-40 sm:w-48 sm:h-48 bg-white rounded-2xl shadow-xl flex items-center justify-center">
-    <h1 className="text-8xl sm:text-9xl font-bold text-slate-800">{letter}</h1>
+const LetterDisplay: React.FC<{ letter: string; onSpeak: (text: string) => void }> = ({ letter, onSpeak }) => (
+  <div
+    onClick={() => onSpeak(letter)}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onSpeak(letter);
+      }
+    }}
+    className="mb-8 w-40 h-40 sm:w-48 sm:h-48 bg-white rounded-2xl shadow-xl flex items-center justify-center cursor-pointer transform transition-transform hover:scale-105 active:scale-95"
+    role="button"
+    tabIndex={0}
+    aria-label={`Letter ${letter}. Click to hear the letter.`}
+  >
+    <h1 className="text-8xl sm:text-9xl font-bold text-slate-800 select-none pointer-events-none">{letter}</h1>
   </div>
 );
+
 
 interface OptionCardProps {
   item: AlphabetItem;
@@ -53,9 +79,10 @@ const OptionCard: React.FC<OptionCardProps> = ({ item, onClick, isSelected, isCo
       onClick={() => onClick(item)}
       disabled={isRevealed}
       className={`flex flex-col items-center justify-center p-4 rounded-xl shadow-lg border-4 transition-all duration-300 transform ${getCardStyle()}`}
+      aria-label={item.word}
     >
-      <span className="text-6xl sm:text-7xl mb-2">{item.emoji}</span>
-      <span className="text-lg sm:text-xl font-medium text-slate-700">{item.word}</span>
+      <span className="text-6xl sm:text-7xl mb-2 pointer-events-none">{item.emoji}</span>
+      <span className="text-lg sm:text-xl font-medium text-slate-700 pointer-events-none">{item.word}</span>
     </button>
   );
 };
@@ -140,6 +167,7 @@ const App: React.FC = () => {
   const handleOptionClick = (item: AlphabetItem) => {
     if (gameState === GameState.Answered) return;
 
+    speak(item.word);
     setSelectedAnswer(item);
     const correctAnswer = questions[currentQuestionIndex];
     if (item.word === correctAnswer.word) {
@@ -167,7 +195,7 @@ const App: React.FC = () => {
         {currentQuestion && gameState !== GameState.GameOver && (
           <>
             <ScoreDisplay score={score} highScore={highScore} />
-            <LetterDisplay letter={currentQuestion.letter} />
+            <LetterDisplay letter={currentQuestion.letter} onSpeak={speak} />
             <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full">
               {options.map(item => (
                 <OptionCard
