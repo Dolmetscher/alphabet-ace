@@ -10,7 +10,7 @@ export const ALPHABET_DATA: LetterData[] = [
   { letter: 'G', choices: [{ word: 'Goat', emoji: '🐐' }, { word: 'Grapes', emoji: '🍇' }, { word: 'Ghost', emoji: '👻' }] },
   { letter: 'H', choices: [{ word: 'Hat', emoji: '👒' }, { word: 'Heart', emoji: '❤️' }, { word: 'Horse', emoji: '🐴' }] },
   { letter: 'I', choices: [{ word: 'Ice Cream', emoji: '🍦' }, { word: 'Igloo', emoji: '🧊' }, { word: 'Island', emoji: '🏝️' }] },
-  { letter: 'J', choices: [{ word: 'Juice', emoji: '🧃' }, { word: 'Jellyfish', emoji: '🪼' }, { word: 'Jacket', emoji: '🧥' }] },
+  { letter: 'J', choices: [{ word: 'Juice', emoji: '🧃' }, { word: 'Jellyfish', emoji: '🌊' }, { word: 'Jacket', emoji: '🧥' }] },
   { letter: 'K', choices: [{ word: 'Kite', emoji: '🪁' }, { word: 'Key', emoji: '🔑' }, { word: 'Kangaroo', emoji: '🦘' }] },
   { letter: 'L', choices: [{ word: 'Lion', emoji: '🦁' }, { word: 'Lemon', emoji: '🍋' }, { word: 'Leaf', emoji: '🍃' }] },
   { letter: 'M', choices: [{ word: 'Monkey', emoji: '🐵' }, { word: 'Moon', emoji: '🌙' }, { word: 'Mouse', emoji: '🐭' }] },
