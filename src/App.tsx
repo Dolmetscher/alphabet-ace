@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ALPHABET_DATA } from './constants';
 import { GameState } from './types';
-import type { AlphabetItem } from './types';
+import type { AlphabetItem, LetterData } from './types';
 
 // Utility function for text-to-speech
 const speak = (text: string) => {
@@ -20,7 +20,7 @@ const speak = (text: string) => {
 // Helper Components (defined outside the main App component)
 
 const ScoreDisplay: React.FC<{ score: number; highScore: number }> = ({ score, highScore }) => (
-  <div className="flex justify-between items-center w-full text-lg sm:text-xl font-semibold text-slate-700 mb-6">
+  <div className="flex justify-between items-center w-full text-lg sm:text-xl font-semibold text-slate-700 mb-4 sm:mb-6">
     <div className="bg-white/70 backdrop-blur-sm shadow-md rounded-lg px-4 py-2">
       Score: <span className="font-bold text-sky-600">{score}</span>
     </div>
@@ -39,12 +39,12 @@ const LetterDisplay: React.FC<{ letter: string; onSpeak: (text: string) => void 
         onSpeak(letter);
       }
     }}
-    className="mb-8 w-40 h-40 sm:w-48 sm:h-48 bg-white rounded-2xl shadow-xl flex items-center justify-center cursor-pointer transform transition-transform hover:scale-105 active:scale-95"
+    className="mb-6 sm:mb-8 w-36 h-36 sm:w-48 sm:h-48 bg-white rounded-2xl shadow-xl flex items-center justify-center cursor-pointer transform transition-transform hover:scale-105 active:scale-95"
     role="button"
     tabIndex={0}
     aria-label={`Letter ${letter}. Click to hear the letter.`}
   >
-    <h1 className="text-8xl sm:text-9xl font-bold text-slate-800 select-none pointer-events-none">{letter}</h1>
+    <h1 className="text-7xl sm:text-9xl font-bold text-slate-800 select-none pointer-events-none">{letter}</h1>
   </div>
 );
 
@@ -78,11 +78,11 @@ const OptionCard: React.FC<OptionCardProps> = ({ item, onClick, isSelected, isCo
     <button
       onClick={() => onClick(item)}
       disabled={isRevealed}
-      className={`flex flex-col items-center justify-center p-4 rounded-xl shadow-lg border-4 transition-all duration-300 transform ${getCardStyle()}`}
+      className={`flex flex-col items-center justify-center p-2 sm:p-4 rounded-xl shadow-lg border-4 transition-all duration-300 transform ${getCardStyle()}`}
       aria-label={item.word}
     >
-      <span className="text-6xl sm:text-7xl mb-2 pointer-events-none">{item.emoji}</span>
-      <span className="text-lg sm:text-xl font-medium text-slate-700 pointer-events-none">{item.word}</span>
+      <span className="text-5xl sm:text-7xl mb-1 sm:mb-2 pointer-events-none">{item.emoji}</span>
+      <span className="text-base sm:text-xl font-medium text-slate-700 pointer-events-none">{item.word}</span>
     </button>
   );
 };
@@ -118,7 +118,8 @@ const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(GameState.Playing);
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [questions, setQuestions] = useState<AlphabetItem[]>([]);
+  const [questions, setQuestions] = useState<LetterData[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState<AlphabetItem | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [options, setOptions] = useState<AlphabetItem[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<AlphabetItem | null>(null);
@@ -127,7 +128,7 @@ const App: React.FC = () => {
     return [...array].sort(() => Math.random() - 0.5);
   };
 
-  const generateQuestion = useCallback((qIndex: number, allQuestions: AlphabetItem[]) => {
+  const generateQuestion = useCallback((qIndex: number, allQuestions: LetterData[]) => {
     if (qIndex >= allQuestions.length) {
       setGameState(GameState.GameOver);
       if (score > highScore) {
@@ -137,9 +138,19 @@ const App: React.FC = () => {
       return;
     }
     
-    const correctAnswer = allQuestions[qIndex];
-    const wrongAnswers = ALPHABET_DATA.filter(item => item.letter !== correctAnswer.letter);
-    const shuffledWrong = shuffleArray(wrongAnswers).slice(0, 3);
+    const currentLetterData = allQuestions[qIndex];
+    const correctChoice = currentLetterData.choices[Math.floor(Math.random() * currentLetterData.choices.length)];
+    const correctAnswer: AlphabetItem = {
+      letter: currentLetterData.letter,
+      ...correctChoice
+    };
+    setCurrentQuestion(correctAnswer);
+
+    const wrongAnswerPool: AlphabetItem[] = ALPHABET_DATA
+      .filter(item => item.letter !== correctAnswer.letter)
+      .flatMap(item => item.choices.map(choice => ({ ...choice, letter: item.letter })));
+
+    const shuffledWrong = shuffleArray(wrongAnswerPool).slice(0, 3);
     const newOptions = shuffleArray([correctAnswer, ...shuffledWrong]);
     
     setOptions(newOptions);
@@ -169,8 +180,7 @@ const App: React.FC = () => {
 
     speak(item.word);
     setSelectedAnswer(item);
-    const correctAnswer = questions[currentQuestionIndex];
-    if (item.word === correctAnswer.word) {
+    if (currentQuestion && item.word === currentQuestion.word) {
       setScore(prev => prev + 1);
     }
     setGameState(GameState.Answered);
@@ -183,20 +193,19 @@ const App: React.FC = () => {
       generateQuestion(nextIndex, questions);
   };
 
-  const currentQuestion = questions[currentQuestionIndex];
   const isAnswerCorrect = selectedAnswer && currentQuestion && selectedAnswer.word === currentQuestion.word;
 
   return (
-    <main className="min-h-screen bg-sky-100 font-sans flex flex-col items-center justify-center p-4">
+    <main className="min-h-screen bg-sky-100 font-sans flex flex-col items-center justify-start p-4 pt-8 sm:justify-center sm:pt-4">
       <div className="relative w-full max-w-md mx-auto flex flex-col items-center">
         <h1 className="text-4xl font-bold text-slate-800 mb-2">Alphabet Ace</h1>
-        <p className="text-slate-500 mb-6">Match the letter!</p>
+        <p className="text-slate-500 mb-4 sm:mb-6">Match the letter!</p>
         
         {currentQuestion && gameState !== GameState.GameOver && (
           <>
             <ScoreDisplay score={score} highScore={highScore} />
             <LetterDisplay letter={currentQuestion.letter} onSpeak={speak} />
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 w-full">
               {options.map(item => (
                 <OptionCard
                   key={item.word}
@@ -212,7 +221,7 @@ const App: React.FC = () => {
             {gameState === GameState.Answered && (
                 <button 
                   onClick={handleNextQuestion}
-                  className="mt-8 w-full bg-amber-500 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-amber-600 transition-colors transform hover:scale-105"
+                  className="mt-6 sm:mt-8 w-full bg-amber-500 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-amber-600 transition-colors transform hover:scale-105"
                 >
                   Next
                 </button>
