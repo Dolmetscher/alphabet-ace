@@ -1,4 +1,3 @@
-
 import type { LetterData } from './types';
 
 export const ALPHABET_DATA: LetterData[] = [
@@ -15,7 +14,7 @@ export const ALPHABET_DATA: LetterData[] = [
   { letter: 'K', choices: [{ word: 'Kite', emoji: '🪁' }, { word: 'Key', emoji: '🔑' }, { word: 'Kangaroo', emoji: '🦘' }] },
   { letter: 'L', choices: [{ word: 'Lion', emoji: '🦁' }, { word: 'Lemon', emoji: '🍋' }, { word: 'Leaf', emoji: '🍃' }] },
   { letter: 'M', choices: [{ word: 'Monkey', emoji: '🐵' }, { word: 'Moon', emoji: '🌙' }, { word: 'Mouse', emoji: '🐭' }] },
-  { letter: 'N', choices: [{ word: 'Nest', emoji: '🪹' }, { word: 'Nose', emoji: '👃' }, { word: 'Notebook', emoji: '📓' }] },
+  { letter: 'N', choices: [{ word: 'Nest', emoji: '🐦' }, { word: 'Nose', emoji: '👃' }, { word: 'Notebook', emoji: '📓' }] },
   { letter: 'O', choices: [{ word: 'Orange', emoji: '🍊' }, { word: 'Octopus', emoji: '🐙' }, { word: 'Owl', emoji: '🦉' }] },
   { letter: 'P', choices: [{ word: 'Pig', emoji: '🐷' }, { word: 'Pizza', emoji: '🍕' }, { word: 'Pencil', emoji: '✏️' }] },
   { letter: 'Q', choices: [{ word: 'Queen', emoji: '👑' }, { word: 'Question', emoji: '❓' }, { word: 'Quilt', emoji: '🪡' }] },
